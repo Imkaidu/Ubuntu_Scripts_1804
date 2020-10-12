@@ -1,0 +1,59 @@
+#!/bin/bash
+
+sudo apt update -y
+
+wget https://github.com/cdr/code-server/releases/download/3.4.1/code-server-3.4.1-linux-x86_64.tar.gz
+
+tar -xzf code-server-3.4.1-linux-x86_64.tar.gz 
+
+cd code-server-3.4.1-linux-x86_64/
+
+#Starting code-server in background using & and sending any output/error in code-server.out so that we won't have to hit ENTER to return to shell.
+./code-server > code-server.out 2>&1 &
+
+PID=$(echo $!)
+echo "PID of code-server is $PID"
+ps -ef | grep $PID
+
+#Send Control-C (SIGINT) to code-server process
+echo "Sending SIGINT to $PID"
+sleep 3 #This is optional. To simply wait for the data to be written to code-server.out
+kill -INT $PID
+echo "Control-C status: $?"
+
+#Alternal way to kill the process using name. Use with caution. Need to be sure there are no other processes with the same name
+#pkill node
+
+sudo apt install nginx -y
+
+#Get Public IP from AWS Metadata Service
+PUB_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+echo "Public IP: $PUB_IP"
+
+#Need sudo permissions to write to this file. echo and cat doesn't cooperate when used with sudo. Alternative is using tee command.
+echo "server{
+listen 80;
+listen [::]:80;
+server_name $PUB_IP;
+location / {
+proxy_pass http://localhost:8080/;
+proxy_set_header Upgrade \$http_upgrade;
+proxy_set_header Connection upgrade;
+proxy_set_header Accept-Encoding gzip;
+}
+}" | sudo tee -a /etc/nginx/sites-available/code-server.conf
+
+sudo ln -s /etc/nginx/sites-available/code-server.conf /etc/nginx/sites-enabled/code-server.conf
+
+echo "Restarting nginx"
+sudo systemctl restart nginx
+
+#Set up password
+mkdir -p ~/.config/code
+echo "bind-addr: 127.0.0.1:8080
+auth: password
+password: Test1234
+cert: false " > ~/.config/code-server/config.yaml
+
+echo "Starting code-server"
+./code-server > code-server.out 2>&1 &

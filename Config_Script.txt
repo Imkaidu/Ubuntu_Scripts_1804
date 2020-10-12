@@ -1,0 +1,90 @@
+Content-Type: multipart/mixed; boundary="//"
+MIME-Version: 1.0
+
+--//
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config.txt"
+
+#cloud-config
+cloud_final_modules:
+- [scripts-user, always]
+
+--//
+Content-Type: text/x-shellscript; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="userdata.txt"
+
+#!/bin/bash
+sudo apt-get update
+sudo apt-get install r-base -y
+touch /etc/apt/source.list
+echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" > /etc/apt/source.list
+sudo apt-get install gdebi-core
+sudo adduser kdu1
+sudo usermod -a -G ubuntu kdu1
+--//
+
+
+
+
+apt update
+
+apt-get install libasound2
+
+
+apt install ubuntu-desktop
+
+apt install tightvncserver
+
+apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
+
+apt-get install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
+
+apt install software-properties-common apt-transport-https
+
+wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+
+add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+
+apt install code
+
+chmod +x ~/.vnc/xstartup
+
+
+echo “gnome-settings-daemon &" >> /etc/apt/text.txt
+
+echo "gnome-settings-daemon &" >> /etc/apt/text.txt
+
+echo "metacity &" >> /etc/apt/text.txt
+
+echo "nautilus &" >> /etc/apt/text.txt
+
+gnome-panel &
+	    gnome-settings-daemon &
+	    metacity &
+	    nautilus &
+  
+             Sample output from my test instance:-
+             ----------------------------------------------------------
+             ubuntu@ip-172-31-78-44:~$ cat .vnc/xstartup
+	     #!/bin/sh
+
+	     xrdb $HOME/.Xresources
+	     xsetroot -solid grey
+	     #x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+	     #x-window-manager &
+	     # Fix to make GNOME work
+	     export XKL_XMODMAP_DISABLE=1
+	     /etc/X11/Xsession
+
+	     gnome-panel &
+	     gnome-settings-daemon &
+	     metacity &
+	     nautilus &
+             ----------------------------------------------------------
+
+
+
