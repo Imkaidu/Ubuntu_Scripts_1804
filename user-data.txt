@@ -3,3 +3,9 @@
 sudo apt update -y
 
 wget https://github.com/Imkaidu/Ubuntu_Scripts_1804/Config_Script.txt
+
+chmod +x Config_Script.sh
+
+Config_Script.sh
+
+#EOF
