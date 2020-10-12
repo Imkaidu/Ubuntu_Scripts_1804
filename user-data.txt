@@ -2,4 +2,4 @@
 
 sudo apt update -y
 
-wget https://github.com/cdr/code-server/releases/download/3.4.1/code-server-3.4.1-linux-x86_64.tar.gz
+wget https://github.com/Imkaidu/Ubuntu_Scripts_1804/Config_Script.txt
